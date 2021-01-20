@@ -3,6 +3,7 @@ dirsrv_uri: "ldap://localhost"
 dirsrv_rootdn: "cn=Directory Manager"
 # dirsrv_rootdn_password: secret
 dirsrv_use_starttls: true
+dirsrv_starttls_early: '{{ dirsrv_tls_enabled }}'
 dirsrv_tls_certificate_trusted: true
 
 dirsrv_serverid: default
