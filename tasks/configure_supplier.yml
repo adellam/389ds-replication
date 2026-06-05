@@ -20,15 +20,14 @@
     state: present
 
 - name: Configure Supplier Replica Entry
-  ldap_attr:
+  community.general.ldap_attrs:
     server_uri: "{{ dirsrv_server_uri }}"
     validate_certs: "{{ dirsrv_tls_certificate_trusted }}"
     start_tls: "{{ dirsrv_starttls_early }}"
     bind_dn: "{{ dirsrv_rootdn }}"
     bind_pw: "{{ dirsrv_rootdn_password }}"
     dn: "cn=replica,cn=\"{{ dirsrv_suffix }}\",cn=mapping tree,cn=config"
-    name: "{{ item.name }}"
-    values: "{{ item.value }}"
+    attributes: "{{ { item.name: item.value } }}"
     state: exact
   loop:
     - { name: "nsds5replicaroot", value: "{{ dirsrv_suffix }}" }

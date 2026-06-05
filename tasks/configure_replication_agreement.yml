@@ -38,15 +38,14 @@
     state: present
 
 - name: Configure replication agreement on supplier
-  ldap_attr:
+  community.general.ldap_attrs:
     server_uri: "{{ dirsrv_server_uri }}"
     validate_certs: "{{ dirsrv_tls_certificate_trusted }}"
     start_tls: "{{ dirsrv_starttls_early }}"
     bind_dn: "{{ dirsrv_rootdn }}"
     bind_pw: "{{ dirsrv_rootdn_password }}"
     dn: "cn={{ dirsrv_agreement_cn }},cn=replica,cn=\"{{ dirsrv_suffix  }}\",cn=mapping tree,cn=config"
-    name: "{{ item.name }}"
-    values: "{{ item.value }}"
+    attributes: "{{ { item.name: item.value } }}"
     state: exact
   loop:
     - { name: "nsds5replicaport", value: "{{ '389' if not dirsrv_consumer_uri|urlsplit('port') else dirsrv_consumer_uri|urlsplit('port') }}" }
@@ -60,15 +59,15 @@
 # The exact same as above, but with "changed_when: false" because that "changed" annoyed me.
 # The downside is that if password actually changes, you'll see that nothing has changed according to Ansible, but it did work.
 - name: Configure password on replication agreement on supplier
-  ldap_attr:
+  community.general.ldap_attrs:
     server_uri: "{{ dirsrv_server_uri }}"
     validate_certs: "{{ dirsrv_tls_certificate_trusted }}"
     start_tls: "{{ dirsrv_starttls_early }}"
     bind_dn: "{{ dirsrv_rootdn }}"
     bind_pw: "{{ dirsrv_rootdn_password }}"
     dn: "cn={{ dirsrv_agreement_cn }},cn=replica,cn=\"{{ dirsrv_suffix }}\",cn=mapping tree,cn=config"
-    name: "nsds5ReplicaCredentials"
-    values: "{{ dirsrv_replication_user_password_remote | default(dirsrv_replication_user_password) }}"
+    attributes:
+      nsds5ReplicaCredentials: "{{ dirsrv_replication_user_password_remote | default(dirsrv_replication_user_password) }}"
     state: exact
   changed_when: false
 
