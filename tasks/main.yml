@@ -17,21 +17,21 @@
 # And there's a fourth one, hub, not supported by this role.
 
 # Supplier or master/both
-- include: configure_changelog.yml
+- ansible.builtin.import_tasks: configure_changelog.yml
   when: dirsrv_instance_is_supplier
 
 # Consumer or master/both
-- include: configure_replication_user.yml
+- ansible.builtin.import_tasks: configure_replication_user.yml
   when: dirsrv_instance_is_consumer
 
 # Consumer
-- include: configure_consumer.yml
+- ansible.builtin.import_tasks: configure_consumer.yml
   when: dirsrv_instance_is_consumer and not dirsrv_instance_is_supplier
 
 # Supplier or master/both
-- include: configure_supplier.yml
+- ansible.builtin.import_tasks: configure_supplier.yml
   when: dirsrv_instance_is_supplier
 
 # Supplier or master/both
-- include: configure_replication_agreement.yml
+- ansible.builtin.import_tasks: configure_replication_agreement.yml
   when: dirsrv_instance_is_supplier
